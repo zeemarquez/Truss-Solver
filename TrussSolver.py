@@ -190,7 +190,7 @@ class PgTruss:
             elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 run = False
         
-
+'''
 nodes = np.array([
     [0,0],
     [4,0],
@@ -233,3 +233,4 @@ print(t1.loads)
 
 trussdraw = PgTruss(t1,800)
 trussdraw.drawNodes()
+'''
