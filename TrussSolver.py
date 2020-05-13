@@ -68,6 +68,7 @@ class Truss:
         y1 = self.nodes[j][1]
 
         d = mt.sqrt( (x0 - x1)**2 + (y0 - y1)**2 )
+
         if d == 0:
             return 0
         else:
@@ -101,7 +102,12 @@ class Truss:
 
         self.result = lst[0]
         self.fmax = fmax
-        
+
+    def truss_weight(self, density):
+        total_weight = 0
+        for bar in self.bars:
+            total_weight += density * mt.sqrt( (  self.nodes[bar[0]][0] - self.nodes[bar[1]][0] )**2 + (  self.nodes[bar[0]][1] - self.nodes[bar[1]][1]  )**2 )
+        return total_weight
 
 class PgTruss:
     def __init__(self,truss_,screenSize_):
@@ -147,9 +153,9 @@ class PgTruss:
             if self.truss.loads[xloadI] != 0 or self.truss.loads[yloadI] != 0 :
                 loadx = 0 - self.truss.loads[xloadI]
                 loady = 0 - self.truss.loads[yloadI]
-                text = "(" + str(loadx) + ", " + str(loady) + ")"
+                text = " P" + str(nodeIndx) + " = " + str(loady) 
                 loadText = myfont.render(text, True, green)
-                self.screen.blit(loadText,(nodex - 30, nodey + 25))
+                self.screen.blit(loadText,(nodex - 10, nodey - 25))
             
             textsurface = myfont.render(str(nodeIndx), True, white)
             self.screen.blit(textsurface,(nodex + 10, nodey + 5))
@@ -166,7 +172,7 @@ class PgTruss:
             midPointx = int((pointA[0] + pointB[0])/2)
             midPointy = int((pointA[1] + pointB[1])/2)
 
-            forceBar = round(self.truss.result[barIndx],1)
+            forceBar = round(self.truss.result[barIndx],2)
             if forceBar>0:
                 color = red
             else:
@@ -189,48 +195,6 @@ class PgTruss:
                 run = False  
             elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 run = False
-        
-'''
-nodes = np.array([
-    [0,0],
-    [4,0],
-    [0,4],
-    [4,4],
-    [0,8],
-    [4,8],
-    [4,12],
-    [8,12],
-    [8,8],
-    [12,8]
-    ])
-
-connections = np.array([
-    [1,2,3],
-    [0,3],          #0
-    [0,3,4],        #1
-    [0,1,2,4,5],    #2
-    [2,3,5,6],      #3
-    [3,4,6,7,8],    #4
-    [4,5,7],        #5
-    [6,5,8,9],      #6
-    [5,7,9],        #7
-    [7,8]           #8
-    ])
-
-t1 = Truss(nodes,connections)
-
-t1.addLoad(0,[-60,-280])
-t1.addLoad(1,[0,360])
-t1.addLoad(9,[60,-80])
-
-t1.solve()
-
-output = t1.result
-
-print(t1.loads)
 
 
 
-trussdraw = PgTruss(t1,800)
-trussdraw.drawNodes()
-'''

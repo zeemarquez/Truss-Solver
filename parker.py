@@ -6,8 +6,8 @@ side = c/3
 height = 50
 h1 = 30
 h2 = 20
-l1 = 80
-l2 = 50
+l1 = side
+l2 = side
 
 
 L = [l1, l1+l2, c]

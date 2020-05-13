@@ -4,10 +4,10 @@ import TrussSolver as ts
 c = 250
 side = c/3
 height = 50
-h1 = 30
-h2 = 20
-l1 = 80
-l2 = 50
+h1 = 50
+h2 = 0
+l1 = 83
+l2 = 83
 
 
 L = [l1, l1+l2, c]
@@ -54,10 +54,18 @@ t1.addLoad(6,[0,0.5])
 t1.addLoad(9,[0,-1])
 
 
-print(t1.bars)
+print("\n",t1.bars)
+print("\n",t1.nodes[6])
 
 t1.solve()
 
+print("\nWeight: ", t1.truss_weight(1))
 
+
+
+
+
+'''
 trussdraw = ts.PgTruss(t1,1600)
 trussdraw.drawNodes()
+'''
