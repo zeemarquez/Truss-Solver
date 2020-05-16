@@ -1,3 +1,7 @@
+import os
+import sys
+sys.path.append(os.getcwd())
+
 import numpy as np
 import TrussSolver as ts 
 
@@ -5,9 +9,9 @@ c = 250
 side = c/3
 height = 50
 h1 = 30
-h2 = 20
-l1 = 80
-l2 = 50
+h2 = height - h1
+l1 = 83
+l2 = 83
 
 
 L = [l1, l1+l2, c]
@@ -48,15 +52,26 @@ connections = np.array([
 
 t1 = ts.Truss(nodes,connections)
 
+load = 1
+t1.addLoad(0,[0,load/2])
+t1.addLoad(6,[0,load/2])
+t1.addLoad(9,[0,-load/3])
+t1.addLoad(8,[0,-load/3])
+t1.addLoad(10,[0,-load/3])
 
-t1.addLoad(0,[0,0.5])
-t1.addLoad(6,[0,0.5])
-t1.addLoad(9,[0,-1])
 
-
-print(t1.bars)
+print("\n",t1.bars)
+print("\n",t1.nodes[6])
 
 t1.solve()
+
+print("\nH1:\t\t", h1)
+print("Weight:\t\t", round(t1.truss_weight(),2))
+print("Fmax Tension:\t", round(t1.fmax_tension,2))
+print("LTW (tension):\t", round(t1.ltw_tension,3))
+print()
+
+
 
 
 trussdraw = ts.PgTruss(t1,1600)

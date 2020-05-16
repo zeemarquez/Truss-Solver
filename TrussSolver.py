@@ -96,18 +96,29 @@ class Truss:
 
         lst = la.lstsq(self.G, self.loads , rcond=None)
         fmax = 0
+        fmax_tension = 0
         for force in lst[0]:
             if abs(force) > fmax:
                 fmax = abs(force)
+        for force in lst[0]:
+            if force > fmax_tension:
+                fmax_tension = force
 
         self.result = lst[0]
         self.fmax = fmax
+        self.fmax_tension = fmax_tension
 
-    def truss_weight(self, density):
+
+    def truss_weight(self):
+        density = 1
         total_weight = 0
         for bar in self.bars:
             total_weight += density * mt.sqrt( (  self.nodes[bar[0]][0] - self.nodes[bar[1]][0] )**2 + (  self.nodes[bar[0]][1] - self.nodes[bar[1]][1]  )**2 )
+        self.weight = total_weight
+        self.ltw_tension = 1000 * 1/(self.fmax_tension * self.weight)
+        self.ltw = 1000 * 1/(self.fmax * self.weight)
         return total_weight
+        
 
 class PgTruss:
     def __init__(self,truss_,screenSize_):
@@ -153,7 +164,7 @@ class PgTruss:
             if self.truss.loads[xloadI] != 0 or self.truss.loads[yloadI] != 0 :
                 loadx = 0 - self.truss.loads[xloadI]
                 loady = 0 - self.truss.loads[yloadI]
-                text = " P" + str(nodeIndx) + " = " + str(loady) 
+                text = " P" + str(nodeIndx) + " = " + str(round(loady,3)) 
                 loadText = myfont.render(text, True, green)
                 self.screen.blit(loadText,(nodex - 10, nodey - 25))
             
